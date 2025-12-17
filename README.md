@@ -1,6 +1,6 @@
 # DS-2002 Project 2: Northwind Data Lakehouse
 
-**Sebastian Baldeon** | University of Virginia | DS-2002 Fall 2024
+**Sebastian Baldeon** | University of Virginia | DS-2002 Fall 2025
 
 ---
 
