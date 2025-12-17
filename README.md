@@ -1,6 +1,6 @@
 # DS-2002 Project 2: Northwind Data Lakehouse
 
-**Sebastian Baldeon** | University of Virginia | DS-2002 Fall 2025
+**Sebastian Baldeon**  | DS-2002 Fall 2025
 
 ---
 
@@ -130,27 +130,6 @@ DS2002-Project2/
 ├── config.py                                     # Credentials (not in Git)
 └── README.md                                     # This file
 ```
-
----
-
-## How to Run
-
-**1. Create `config.py`:**
-```python
-MYSQL_USER = "your_username"
-MYSQL_PASSWORD = "your_password"
-MONGODB_USER = "your_mongo_user"
-MONGODB_PASSWORD = "your_mongo_password"
-```
-
-**2. Update paths in notebook:**
-- MongoDB cluster info (if different)
-- MySQL JDBC JAR path
-
-**3. Run notebook:**
-- Kernel → Restart & Run All
-- Expected runtime: 2-3 minutes
-- All cells should execute successfully
 
 ---
 
