@@ -1,6 +1,6 @@
 # DS-2002 Project 2: Northwind Data Lakehouse
 
-**Sebastian Baldeon** | University of Virginia | DS-2002 Fall 2025
+**Sebastian Baldeon**  | DS-2002 Fall 2025
 
 ---
 
@@ -36,8 +36,6 @@ Built a dimensional Data Lakehouse for Northwind Traders order management using 
 - **Silver** = Enrichment by joining streams with static dimensions  
 - **Gold** = Final denormalized fact table for fast queries
 
-**Trade-off:** Initially tried Delta Lake for ACID guarantees, but it's not in local PySpark. Switched to Parquet - still fast for analytics, just no ACID.
-
 ---
 
 ### 2. Multi-Source Integration Strategy
@@ -62,7 +60,7 @@ Built a dimensional Data Lakehouse for Northwind Traders order management using 
 .readStream.format("json").option("maxFilesPerTrigger", 1)
 ```
 
-**Why this works:** `maxFilesPerTrigger: 1` processes one file per trigger = 3 intervals for 3 files. This is the local PySpark equivalent of AutoLoader. TA confirmed this approach was acceptable.
+**Why this works:** `maxFilesPerTrigger: 1` processes one file per trigger = 3 intervals for 3 files. This is the local PySpark equivalent of AutoLoader.
 
 **Verified:** Console showed "Stream has processed 3 batches" ✓
 
@@ -75,8 +73,6 @@ Built a dimensional Data Lakehouse for Northwind Traders order management using 
 **Root cause:** JSON files were in array format `[{...}, {...}]` but Spark streaming needs newline-delimited format (one object per line).
 
 **Solution:** Added preprocessing cell to convert format. After conversion, all 58 records loaded correctly with real data.
-
-**Lesson learned:** Always validate data format before streaming!
 
 ---
 
@@ -93,17 +89,17 @@ Built a dimensional Data Lakehouse for Northwind Traders order management using 
 
 ## Requirements Checklist
 
-✅ **Date dimension** - 365 dates with year/month/quarter  
-✅ **3+ dimensions** - 4 dimensions (customers, products, employees, shippers)  
-✅ **1+ fact table** - fact_orders with order management metrics  
-✅ **Relational source** - MySQL (employees, shippers)  
-✅ **NoSQL source** - MongoDB Atlas (customers, products)  
-✅ **File source** - JSON streaming files  
-✅ **Static + streaming** - Dimensions (batch) + Facts (stream)  
-✅ **AutoLoader pattern** - maxFilesPerTrigger: 1 for 3 intervals  
-✅ **Bronze/Silver/Gold** - Full medallion architecture  
-✅ **Stream-static joins** - Silver layer enrichment  
-✅ **Business value** - 5 analytics queries  
+ **Date dimension** - 365 dates with year/month/quarter  
+ **3+ dimensions** - 4 dimensions (customers, products, employees, shippers)  
+ **1+ fact table** - fact_orders with order management metrics  
+ **Relational source** - MySQL (employees, shippers)  
+ **NoSQL source** - MongoDB Atlas (customers, products)  
+ **File source** - JSON streaming files  
+ **Static + streaming** - Dimensions (batch) + Facts (stream)  
+ **AutoLoader pattern** - maxFilesPerTrigger: 1 for 3 intervals  
+ **Bronze/Silver/Gold** - Full medallion architecture  
+ **Stream-static joins** - Silver layer enrichment  
+ **Business value** - 5 analytics queries  
 
 ---
 
@@ -133,27 +129,6 @@ DS2002-Project2/
 
 ---
 
-## How to Run
-
-**1. Create `config.py`:**
-```python
-MYSQL_USER = "your_username"
-MYSQL_PASSWORD = "your_password"
-MONGODB_USER = "your_mongo_user"
-MONGODB_PASSWORD = "your_mongo_password"
-```
-
-**2. Update paths in notebook:**
-- MongoDB cluster info (if different)
-- MySQL JDBC JAR path
-
-**3. Run notebook:**
-- Kernel → Restart & Run All
-- Expected runtime: 2-3 minutes
-- All cells should execute successfully
-
----
-
 ## Key Learnings
 
 **Technical:**
@@ -164,7 +139,6 @@ MONGODB_PASSWORD = "your_mongo_password"
 **Process:**
 - Always validate format compatibility before streaming
 - Multi-source integration needs careful planning
-- Security matters: never commit credentials to Git
 
 **Architecture:**
 - Medallion pattern naturally separates ingestion/transformation/aggregation
@@ -180,8 +154,6 @@ MONGODB_PASSWORD = "your_mongo_password"
 | All NULL values in Bronze | Converted JSON to newline-delimited format |
 | Delta Lake unavailable | Switched to Parquet (works for analytics) |
 | AutoLoader not in local Spark | Used maxFilesPerTrigger equivalent |
-| Credential security | Used config.py excluded from Git |
-
 ---
 
 **End Result:** Production-ready data lakehouse demonstrating multi-source integration, streaming processing, and dimensional modeling for business intelligence.
