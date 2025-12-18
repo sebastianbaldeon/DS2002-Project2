@@ -36,8 +36,6 @@ Built a dimensional Data Lakehouse for Northwind Traders order management using 
 - **Silver** = Enrichment by joining streams with static dimensions  
 - **Gold** = Final denormalized fact table for fast queries
 
-**Trade-off:** Initially tried Delta Lake for ACID guarantees, but it's not in local PySpark. Switched to Parquet - still fast for analytics, just no ACID.
-
 ---
 
 ### 2. Multi-Source Integration Strategy
@@ -62,7 +60,7 @@ Built a dimensional Data Lakehouse for Northwind Traders order management using 
 .readStream.format("json").option("maxFilesPerTrigger", 1)
 ```
 
-**Why this works:** `maxFilesPerTrigger: 1` processes one file per trigger = 3 intervals for 3 files. This is the local PySpark equivalent of AutoLoader. TA confirmed this approach was acceptable.
+**Why this works:** `maxFilesPerTrigger: 1` processes one file per trigger = 3 intervals for 3 files. This is the local PySpark equivalent of AutoLoader.
 
 **Verified:** Console showed "Stream has processed 3 batches" ✓
 
@@ -75,8 +73,6 @@ Built a dimensional Data Lakehouse for Northwind Traders order management using 
 **Root cause:** JSON files were in array format `[{...}, {...}]` but Spark streaming needs newline-delimited format (one object per line).
 
 **Solution:** Added preprocessing cell to convert format. After conversion, all 58 records loaded correctly with real data.
-
-**Lesson learned:** Always validate data format before streaming!
 
 ---
 
@@ -143,7 +139,6 @@ DS2002-Project2/
 **Process:**
 - Always validate format compatibility before streaming
 - Multi-source integration needs careful planning
-- Security matters: never commit credentials to Git
 
 **Architecture:**
 - Medallion pattern naturally separates ingestion/transformation/aggregation
@@ -159,8 +154,6 @@ DS2002-Project2/
 | All NULL values in Bronze | Converted JSON to newline-delimited format |
 | Delta Lake unavailable | Switched to Parquet (works for analytics) |
 | AutoLoader not in local Spark | Used maxFilesPerTrigger equivalent |
-| Credential security | Used config.py excluded from Git |
-
 ---
 
 **End Result:** Production-ready data lakehouse demonstrating multi-source integration, streaming processing, and dimensional modeling for business intelligence.
